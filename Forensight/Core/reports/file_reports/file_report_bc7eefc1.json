@@ -1,0 +1,25 @@
+{
+  "file_name": "test_file.txt",
+  "file_size": "86.00 B",
+  "mime_type": "text/plain",
+  "magic_header": "unknown",
+  "hashes": {
+    "md5": "bc7eefc159bcfdd43604497ba3af8a13",
+    "sha1": "28feb93abd7245f9389564f2d1b559c281c616bb",
+    "sha256": "f055b313785250b261033415dd6d818a76fdd514bf654cfee813ada707743a47"
+  },
+  "entropy": 4.1534,
+  "extension_mismatch": true,
+  "metadata": {},
+  "suspicious_strings": [
+    "This is a sample forensic file.",
+    "It contains random text for metadata detection."
+  ],
+  "mp4_warnings": [],
+  "analysis_timestamp": "2026-01-01T09:53:17.485517+00:00",
+  "risk_score": 45,
+  "risk_reasons": [
+    "Extension mismatch",
+    "Suspicious strings"
+  ]
+}

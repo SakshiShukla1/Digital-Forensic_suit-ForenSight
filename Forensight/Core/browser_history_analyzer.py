@@ -293,3 +293,18 @@ if __name__ == "__main__":
     print(f"[+] Total records extracted: {len(timeline)}")
     save_reports(timeline)
     print("[✓] Reports saved to browser_reports/")
+
+
+def run_module():
+    """This function is the bridge to your Frontend UI"""
+    print("Starting Browser Analysis...")
+    timeline = build_timeline()
+    json_path, csv_path = save_reports(timeline)
+    
+    # We return a summary that the UI can display
+    return {
+        "total_records": len(timeline),
+        "json_report": json_path,
+        "csv_report": csv_path,
+        "top_findings": timeline[:5] # Send the 5 most recent visits to show in a preview table
+    }

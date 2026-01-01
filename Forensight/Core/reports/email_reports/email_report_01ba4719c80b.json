@@ -1,0 +1,14 @@
+{
+  "email_hash": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+  "analysis_time": "2026-01-01T09:53:30.554038+00:00",
+  "headers": {
+    "from": "",
+    "to": "",
+    "subject": "",
+    "date": ""
+  },
+  "urls_found": [],
+  "risk_score": 0,
+  "verdict": "clean",
+  "findings": []
+}

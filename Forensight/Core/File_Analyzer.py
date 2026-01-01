@@ -363,3 +363,56 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+# ... (all your existing forensic logic functions stay above) ...
+
+# ==================================================
+# THE UI BRIDGE (Add this at the bottom)
+# ==================================================
+
+def run_module(file_path):
+    """
+    Bridge function for the Frontend UI.
+    Takes a file_path, runs all forensic tests, 
+    and returns a package for the Dashboard.
+    """
+    if not os.path.isfile(file_path):
+        return {"status": "error", "message": "File not found"}
+
+    try:
+        # 1. Run your core logic
+        report = analyze_file(file_path)
+        
+        # 2. Save the JSON report for the records
+        report_dir = os.path.join(os.getcwd(), "reports", "file_reports")
+        os.makedirs(report_dir, exist_ok=True)
+        
+        # We use the MD5 hash to give the report a unique name
+        report_name = f"file_report_{report['hashes']['md5'][:8]}.json"
+        report_path = os.path.join(report_dir, report_name)
+        
+        with open(report_path, "w", encoding="utf-8") as f:
+            json.dump(report, f, indent=2)
+
+        # 3. Prepare the UI Package (This is what your UI "sees")
+        return {
+            "status": "success",
+            "file_name": report["file_name"],
+            "file_size": report["file_size"],
+            "mime_type": report["mime_type"],
+            "risk_score": report["risk_score"],
+            "verdict": "Suspicious" if report["risk_score"] > 50 else "Safe",
+            "entropy": report["entropy"],
+            "mismatch": report["extension_mismatch"],
+            "report_path": report_path,
+            "all_data": report 
+        }
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+# This is the NEW clean entry point for testing
+if __name__ == "__main__":
+    # If you want to test without the UI, uncomment the line below:
+    # print(run_module("path/to/your/test_file.exe"))
+    print("File Analyzer Module Loaded. Waiting for UI call...")

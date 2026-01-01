@@ -1,0 +1,71 @@
+{
+  "file_name": "temp_copywriting portfolio.docx",
+  "file_size": "15.72 KB",
+  "mime_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "magic_header": "zip/office",
+  "hashes": {
+    "md5": "a8e8573bcb2b60244d4d91af66b8eb2e",
+    "sha1": "dfc3f0382ab6df270935e06b4261adabd65d0cee",
+    "sha256": "d3742bb59e523c24472bf0294961f298340dee4665ba880d4d93a8a83eee1454"
+  },
+  "entropy": 7.4086,
+  "extension_mismatch": true,
+  "metadata": {
+    "docx": {
+      "author": "Sakshi Shukla",
+      "created": "2025-11-27 22:06:00+00:00",
+      "modified": "2025-12-11 19:15:00+00:00",
+      "last_modified_by": "Sakshi Shukla"
+    }
+  },
+  "suspicious_strings": [
+    " ?!UMjf",
+    "*ir?IW",
+    "word/theme/theme1.xmlPK",
+    "_rels/.relsPK",
+    "g.bcg!",
+    "word/webSettings.xmlPK",
+    "r+7MES",
+    "word/settings.xmlPK",
+    "word/styles.xmlPK",
+    "word/fontTable.xml",
+    "docProps/app.xmlPK",
+    "word/theme/theme1.xml",
+    "word/settings.xml",
+    "[Content_Types].xmlPK",
+    "word/_rels/document.xml.rels ",
+    "docProps/core.xml ",
+    "J}\\e*H",
+    "oY^Wq=",
+    "$YFT[[",
+    ":5Kc5Y",
+    "word/webSettings.xml",
+    "docProps/core.xmlPK",
+    "$,Nix{",
+    "docProps/app.xml ",
+    "}cd|x2",
+    "_rels/.rels ",
+    "[Content_Types].xml ",
+    "word/document.xml",
+    " o?9m`",
+    "J52$4v",
+    "Z@kIw-",
+    "word/document.xmlPK",
+    ")0*?S`T~6|",
+    "%Y>[%t",
+    ":>S!?p",
+    "JyPE'`",
+    "word/fontTable.xmlPK",
+    "word/_rels/document.xml.relsPK",
+    "JTw$`V",
+    "}-;}PB",
+    "word/styles.xml"
+  ],
+  "mp4_warnings": [],
+  "analysis_timestamp": "2026-01-01T10:46:29.000337+00:00",
+  "risk_score": 45,
+  "risk_reasons": [
+    "Extension mismatch",
+    "Suspicious strings"
+  ]
+}

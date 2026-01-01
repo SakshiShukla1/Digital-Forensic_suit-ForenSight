@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+/* Add this for a Billionaire Dark Mode feel */
+body {
+  margin: 0;
+  background-color: #020617;
+  color: #f8fafc;
+}

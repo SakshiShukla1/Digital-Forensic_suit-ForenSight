@@ -1,0 +1,22 @@
+{
+  "email_hash": "08eaafa65e534033ca442e93f2a260c2f7c9f8fc34d0186425626c0c2325108a",
+  "analysis_time": "2026-01-01T10:00:23.893639+00:00",
+  "headers": {
+    "from": "",
+    "to": "",
+    "subject": "",
+    "date": ""
+  },
+  "urls_found": [],
+  "risk_score": 10,
+  "verdict": "clean",
+  "findings": [
+    {
+      "type": "suspicious_keywords",
+      "details": [
+        "bank",
+        "click"
+      ]
+    }
+  ]
+}

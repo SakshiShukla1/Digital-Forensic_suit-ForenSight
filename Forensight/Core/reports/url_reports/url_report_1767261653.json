@@ -1,0 +1,9 @@
+{
+  "url": "https://mail.google.com/mail/u/0/#inbox/FMfcgzQfBGVpDVXqmHXjDcrgwrqrgljv",
+  "score": 35,
+  "verdict": "Suspicious",
+  "findings": [
+    "Possible brand-spoofing: 'google' found in domain."
+  ],
+  "timestamp": "2026-01-01T15:30:53.575822"
+}

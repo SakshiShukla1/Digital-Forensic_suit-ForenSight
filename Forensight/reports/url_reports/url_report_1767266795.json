@@ -1,0 +1,9 @@
+{
+  "url": "https://gemini.google.com/app/187e74b591aad38c?hl=en-IN",
+  "score": 35,
+  "verdict": "Suspicious",
+  "findings": [
+    "Possible brand-spoofing: 'google' found in domain."
+  ],
+  "timestamp": "2026-01-01T16:56:35.862139"
+}
