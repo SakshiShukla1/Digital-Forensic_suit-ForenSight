@@ -1,9 +1,0 @@
-{
-  "url": "http://localhost:5173/",
-  "score": 15,
-  "verdict": "Clean",
-  "findings": [
-    "Domain contains unusual long numbers."
-  ],
-  "timestamp": "2026-01-01T16:52:33.434335"
-}
