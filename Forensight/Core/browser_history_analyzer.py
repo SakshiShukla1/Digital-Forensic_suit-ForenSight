@@ -1,7 +1,3 @@
-# browser_history_analyzer.py
-# ForenSight – Browser History Forensics Module
-# Chromium, Firefox, Tor (Static Analysis)
-# Output: browser_reports/browser_timeline.json & browser_timeline.csv
 
 import os
 import sqlite3
@@ -12,17 +8,13 @@ import re
 from datetime import datetime, timedelta, timezone
 from urllib.parse import urlparse
 
-# ==================================================
 # ENVIRONMENT PATHS (Windows)
-# ==================================================
 
 LOCALAPP = os.path.expandvars(r"%LOCALAPPDATA%")
 APPDATA  = os.path.expandvars(r"%APPDATA%")
 HOME     = os.path.expanduser("~")
 
-# ==================================================
 # BROWSER DATABASE LOCATIONS
-# ==================================================
 
 CHROMIUM_BROWSERS = {
     "Chrome":   os.path.join(LOCALAPP, r"Google\Chrome\User Data\Default\History"),
@@ -44,16 +36,12 @@ TOR_PLACES = os.path.join(
     r"Tor Browser\Browser\TorBrowser\Data\Browser\profile.default\places.sqlite"
 )
 
-# ==================================================
 # OUTPUT
-# ==================================================
 
 OUT_DIR = os.path.join(os.getcwd(), "browser_reports")
 os.makedirs(OUT_DIR, exist_ok=True)
 
-# ==================================================
 # FORENSIC RULESETS
-# ==================================================
 
 SHORTENED_DOMAINS = {"bit.ly", "tinyurl.com", "goo.gl", "t.co", "ow.ly"}
 PHISHING_KEYWORDS = {"verify", "login", "secure", "account", "update", "confirm",
@@ -61,9 +49,7 @@ PHISHING_KEYWORDS = {"verify", "login", "secure", "account", "update", "confirm"
 SUSPICIOUS_TLDS   = {".xyz", ".top", ".click", ".work", ".zip", ".review", ".ru", ".tk"}
 POPULAR_BRANDS   = {"google", "amazon", "paypal", "apple", "facebook", "instagram"}
 
-# ==================================================
 # TIMESTAMP CONVERSIONS
-# ==================================================
 
 def chrome_time_to_dt(value):
     """Chrome: microseconds since 1601-01-01"""
@@ -81,9 +67,7 @@ def firefox_time_to_dt(value):
     except Exception:
         return None
 
-# ==================================================
 # URL ANALYSIS
-# ==================================================
 
 def extract_domain(url):
     try:
@@ -119,14 +103,17 @@ def analyze_url(url):
             break
 
     for brand in POPULAR_BRANDS:
-        if brand in domain and not domain.startswith(brand):
+      if brand in domain:
+        # Allow legitimate subdomains like accounts.google.com
+          if not (
+            domain == f"{brand}.com" or
+            domain.endswith(f".{brand}.com")
+          ):
             flags.append(f"brand_impersonation:{brand}")
 
     return list(dict.fromkeys(flags))
 
-# ==================================================
 # SAFE DATABASE COPYING
-# ==================================================
 
 def safe_copy_db(src):
     if not os.path.exists(src):
@@ -141,9 +128,7 @@ def safe_copy_db(src):
     except Exception:
         return None
 
-# ==================================================
 # PARSERS
-# ==================================================
 
 def parse_chromium_history(db_path, browser_name):
     results = []
@@ -216,9 +201,7 @@ def parse_firefox_history(db_path):
 
     return results
 
-# ==================================================
 # DISCOVERY
-# ==================================================
 
 def find_chromium_dbs():
     return {name: path for name, path in CHROMIUM_BROWSERS.items() if os.path.exists(path)}
@@ -236,9 +219,7 @@ def find_firefox_dbs():
         found.append(TOR_PLACES)
     return found
 
-# ==================================================
 # TIMELINE BUILDER
-# ==================================================
 
 def build_timeline():
     timeline = []
@@ -257,9 +238,7 @@ def build_timeline():
 
     return sorted(timeline, key=sort_key, reverse=True)
 
-# ==================================================
 # REPORTING
-# ==================================================
 
 def save_reports(timeline):
     json_path = os.path.join(OUT_DIR, "browser_timeline.json")
@@ -283,9 +262,7 @@ def save_reports(timeline):
 
     return json_path, csv_path
 
-# ==================================================
 # ENTRY POINT
-# ==================================================
 
 if __name__ == "__main__":
     print("[*] Building browser history forensic timeline...")
@@ -295,16 +272,86 @@ if __name__ == "__main__":
     print("[✓] Reports saved to browser_reports/")
 
 
+def calculate_browser_risk(timeline):
+    if not timeline:
+        return 0
+
+    total = len(timeline)
+    suspicious = 0
+
+    for entry in timeline:
+        if entry.get("flags"):
+            suspicious += 1
+
+    # percentage-based risk
+    risk_percentage = (suspicious / total) * 100
+
+    return int(risk_percentage)
+
+
+def generate_verdict(score):
+    if score >= 75:
+        return "CRITICAL_RISK"
+    elif score >= 50:
+        return "HIGH_RISK"
+    elif score >= 25:
+        return "MODERATE_RISK"
+    else:
+        return "LOW_RISK"
+
 def run_module():
-    """This function is the bridge to your Frontend UI"""
-    print("Starting Browser Analysis...")
-    timeline = build_timeline()
-    json_path, csv_path = save_reports(timeline)
-    
-    # We return a summary that the UI can display
-    return {
-        "total_records": len(timeline),
-        "json_report": json_path,
-        "csv_report": csv_path,
-        "top_findings": timeline[:5] # Send the 5 most recent visits to show in a preview table
-    }
+    try:
+        full_timeline = []
+
+        # Collect Chromium
+        for browser_name, path in find_chromium_dbs().items():
+            data = parse_chromium_history(path, browser_name)
+            if data:
+                full_timeline.extend(data)
+
+        # Collect Firefox / Tor
+        for path in find_firefox_dbs():
+            data = parse_firefox_history(path)
+            if data:
+                full_timeline.extend(data)
+
+        if not full_timeline:
+            return {
+                "module": "Browser",
+                "score": 0,
+                "verdict": "NO_DATA_FOUND",
+                "indicators": [],
+                "top_findings": [],
+                "summary": {"total_records": 0, "suspicious_records": 0},
+                "target": "System History" # Critical for Frontend mapping
+            }
+
+        risk_score = calculate_browser_risk(full_timeline)
+        verdict = generate_verdict(risk_score)
+        json_path, csv_path = save_reports(full_timeline)
+
+        indicators = []
+        for entry in full_timeline:
+            if entry["flags"]:
+                indicators.append({
+                    "domain": entry["domain"],
+                    "browser": entry["browser"],
+                    "flags": entry["flags"],
+                    "last_visit": entry["last_visit"]
+                })
+
+        return {
+            "module": "Browser",
+            "target": "System History", # Add this so the UI knows what to label it
+            "score": risk_score,
+            "verdict": verdict,
+            "indicators": indicators,
+            "top_findings": indicators[:10], # Show more findings
+            "summary": {
+                "total_records": len(full_timeline),
+                "suspicious_records": len(indicators)
+            }
+        }
+
+    except Exception as e:
+        return {"status": "error", "message": str(e)}

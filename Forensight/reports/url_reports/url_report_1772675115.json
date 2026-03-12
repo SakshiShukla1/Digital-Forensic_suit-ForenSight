@@ -1,0 +1,17 @@
+{
+  "module_name": "url",
+  "url": "https://chatgpt.com/c/6961e791-a2a8-8321-8385-0f4bbde7a330",
+  "analysis_time": "2026-03-05T07:15:15.545458",
+  "total_records": 1,
+  "risk_score": 30,
+  "indicators": [
+    {
+      "type": "shortened_url"
+    }
+  ],
+  "top_findings": [
+    {
+      "type": "shortened_url"
+    }
+  ]
+}

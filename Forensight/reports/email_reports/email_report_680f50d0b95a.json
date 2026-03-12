@@ -1,0 +1,23 @@
+{
+  "module_name": "email",
+  "analysis_time": "2026-03-01T11:07:02.408592+00:00",
+  "email_hash": "680f50d0b95a38027f466ba92ccd5394996fc92eb7e11d494a536c836b0951f3",
+  "headers": {
+    "from": "",
+    "to": "",
+    "subject": "Meeting Reminder  Hi John,  Just reminding you about tomorrow's project meeting at 10 AM.  Thanks, Sarah",
+    "date": ""
+  },
+  "total_records": 1,
+  "risk_score": 8,
+  "indicators": [
+    {
+      "type": "missing_date_header"
+    }
+  ],
+  "top_findings": [
+    {
+      "type": "missing_date_header"
+    }
+  ]
+}

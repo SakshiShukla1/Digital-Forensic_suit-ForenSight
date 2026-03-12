@@ -1,0 +1,35 @@
+{
+  "module_name": "email",
+  "analysis_time": "2026-03-04T11:12:46.735745+00:00",
+  "email_hash": "cff1f9fe736bef66c107abc0e8fbb9ac4015687ae1d89f695d2697378d9d0d0c",
+  "headers": {
+    "from": "",
+    "to": "",
+    "subject": "",
+    "date": ""
+  },
+  "total_records": 1,
+  "risk_score": 14,
+  "indicators": [
+    {
+      "type": "suspicious_keywords",
+      "details": [
+        "free"
+      ]
+    },
+    {
+      "type": "missing_date_header"
+    }
+  ],
+  "top_findings": [
+    {
+      "type": "suspicious_keywords",
+      "details": [
+        "free"
+      ]
+    },
+    {
+      "type": "missing_date_header"
+    }
+  ]
+}

@@ -12,85 +12,100 @@ def analyze_url(url):
     findings = []
     score = 0
     parsed = urlparse(url)
-    domain = parsed.netloc
+    domain = parsed.netloc.lower()
 
-    # 1. Check for shortened URLs
+    # 1️⃣ Shortened URLs
     shortened_domains = ["bit.ly", "tinyurl", "goo.gl", "t.co", "ow.ly"]
     if any(short in domain for short in shortened_domains):
-        findings.append("Shortened URL → often used to hide malicious links.")
+        findings.append({"type": "shortened_url"})
         score += 30
 
-    # 2. Suspicious TLDs
+    # 2️⃣ Suspicious TLDs
     bad_tlds = [".xyz", ".top", ".click", ".work", ".info", ".zip", ".review"]
     if any(domain.endswith(t) for t in bad_tlds):
-        findings.append(f"Suspicious domain ending (.{domain.split('.')[-1]}).")
+        findings.append({"type": "suspicious_tld"})
         score += 25
 
-    # 3. Presence of numbers
+    # 3️⃣ Long Numbers in Domain
     if re.search(r"[0-9]{3,}", domain):
-        findings.append("Domain contains unusual long numbers.")
+        findings.append({"type": "numeric_domain"})
         score += 15
 
-    # 4. Too many hyphens
+    # 4️⃣ Multiple Hyphens
     if domain.count("-") >= 2:
-        findings.append("Domain contains multiple hyphens.")
+        findings.append({"type": "multiple_hyphens"})
         score += 15
 
-    # 5. Phishing keywords
+    # 5️⃣ Phishing Keywords
     phishing_words = ["verify", "login", "update", "secure", "bank", "confirm"]
-    if any(w in url.lower() for w in phishing_words):
-        findings.append("URL contains phishing-related keywords.")
-        score += 20
+    matched_keywords = [w for w in phishing_words if w in url.lower()]
+    if matched_keywords:
+        findings.append({
+            "type": "phishing_keywords",
+            "details": matched_keywords
+        })
+        score += min(len(matched_keywords) * 8, 25)
 
-    # 6. Brand spoofing
+    # 6️⃣ Brand Spoofing
     popular_brands = ["google", "amazon", "paypal", "bank", "apple"]
     for brand in popular_brands:
-        if brand in domain.lower() and not domain.startswith(brand):
-            findings.append(f"Possible brand-spoofing: '{brand}' found in domain.")
+        if brand in domain and not domain.startswith(brand):
+            findings.append({
+                "type": "brand_spoofing",
+                "brand": brand
+            })
             score += 35
 
-    # Final Verdict Logic
-    verdict = "Clean"
-    if score >= 60: verdict = "Malicious"
-    elif score >= 25: verdict = "Suspicious"
-
     return {
+        "module_name": "url",
         "url": url,
-        "score": min(score, 100),
-        "verdict": verdict,
-        "findings": findings,
-        "timestamp": datetime.now().isoformat()
+        "analysis_time": datetime.now().isoformat(),
+        "total_records": 1,
+        "risk_score": min(score, 100),
+        "indicators": findings,
+        "top_findings": findings[:5]
     }
 
-# ==================================================
-# THE UI BRIDGE
-# ==================================================
+
+# THE UI BRIDGE (Standardized Forensic Contract)
 
 def run_module(url_input):
-    """Bridge for the Frontend UI"""
+
     if not url_input.strip():
         return {"status": "error", "message": "No URL provided"}
-    
-    # 1. Run Analysis
-    result = analyze_url(url_input)
-    
-    # 2. Save Report
-    report_file = f"url_report_{int(datetime.now().timestamp())}.json"
-    report_path = os.path.join(REPORT_DIR, report_file)
-    with open(report_path, "w") as f:
-        json.dump(result, f, indent=2)
-    
-    # 3. Return UI Package
-    return {
-        "status": "success",
-        "url": result["url"],
-        "score": result["score"],
-        "verdict": result["verdict"],
-        "findings_count": len(result["findings"]),
-        "findings_list": result["findings"],
-        "report_path": report_path
-    }
 
-if __name__ == "__main__":
-    # Test
-    print(run_module("http://paypal-login-verify.xyz"))
+    try:
+        result = analyze_url(url_input)
+
+        # --- Save JSON Report ---
+        report_file = f"url_report_{int(datetime.now().timestamp())}.json"
+        report_path = os.path.join(REPORT_DIR, report_file)
+
+        with open(report_path, "w") as f:
+            json.dump(result, f, indent=2)
+
+        # --- Standardized Risk Contract ---
+        score = result["risk_score"]
+
+        verdict = (
+            "CRITICAL_RISK" if score >= 75 else
+            "HIGH_RISK" if score >= 50 else
+            "MODERATE_RISK" if score >= 25 else
+            "LOW_RISK"
+        )
+
+        return {
+            "module": "url",
+            "score": score,
+            "verdict": verdict,
+            "indicators": result["indicators"],
+            "top_findings": result["top_findings"],
+            "summary": {
+                "url": result["url"],
+                "domain": result["url"].split("//")[-1]
+            },
+            "json_report": report_path
+        }
+
+    except Exception as e:
+        return {"status": "error", "message": str(e)}

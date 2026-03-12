@@ -1,0 +1,43 @@
+{
+  "module_name": "url",
+  "url": "http://verify-paypal-account.top",
+  "analysis_time": "2026-03-05T13:39:25.367346",
+  "total_records": 1,
+  "risk_score": 83,
+  "indicators": [
+    {
+      "type": "suspicious_tld"
+    },
+    {
+      "type": "multiple_hyphens"
+    },
+    {
+      "type": "phishing_keywords",
+      "details": [
+        "verify"
+      ]
+    },
+    {
+      "type": "brand_spoofing",
+      "brand": "paypal"
+    }
+  ],
+  "top_findings": [
+    {
+      "type": "suspicious_tld"
+    },
+    {
+      "type": "multiple_hyphens"
+    },
+    {
+      "type": "phishing_keywords",
+      "details": [
+        "verify"
+      ]
+    },
+    {
+      "type": "brand_spoofing",
+      "brand": "paypal"
+    }
+  ]
+}

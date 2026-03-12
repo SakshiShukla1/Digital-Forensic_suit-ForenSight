@@ -1,0 +1,37 @@
+{
+  "module_name": "url",
+  "url": "http://paypal-login-verify.xyz",
+  "analysis_time": "2026-03-01T16:35:23.607615",
+  "total_records": 1,
+  "risk_score": 56,
+  "indicators": [
+    {
+      "type": "suspicious_tld"
+    },
+    {
+      "type": "multiple_hyphens"
+    },
+    {
+      "type": "phishing_keywords",
+      "details": [
+        "verify",
+        "login"
+      ]
+    }
+  ],
+  "top_findings": [
+    {
+      "type": "suspicious_tld"
+    },
+    {
+      "type": "multiple_hyphens"
+    },
+    {
+      "type": "phishing_keywords",
+      "details": [
+        "verify",
+        "login"
+      ]
+    }
+  ]
+}

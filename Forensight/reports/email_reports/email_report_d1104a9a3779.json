@@ -1,0 +1,23 @@
+{
+  "module_name": "email",
+  "analysis_time": "2026-03-05T08:25:08.142242+00:00",
+  "email_hash": "d1104a9a3779f1b8edcde8f41101d6fec2701779555ce057bfa19e4a08c37e90",
+  "headers": {
+    "from": "security@paypal-alert.com To: victim@gmail.com Subject: Urgent: Verify your PayPal Account  Dear Customer,  Your PayPal account has been temporarily suspended due to unusual activity.  To restore access please verify your account immediately.  Click the secure link below:  http://verify-paypal-account.top/login  Failure to verify within 24 hours will result in permanent suspension.  PayPal Security Team",
+    "to": "",
+    "subject": "",
+    "date": ""
+  },
+  "total_records": 1,
+  "risk_score": 8,
+  "indicators": [
+    {
+      "type": "missing_date_header"
+    }
+  ],
+  "top_findings": [
+    {
+      "type": "missing_date_header"
+    }
+  ]
+}

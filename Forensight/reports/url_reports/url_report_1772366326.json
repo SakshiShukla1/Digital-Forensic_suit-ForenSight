@@ -1,0 +1,17 @@
+{
+  "module_name": "url",
+  "url": "https://bit.ly/3XyzFake",
+  "analysis_time": "2026-03-01T17:28:46.205008",
+  "total_records": 1,
+  "risk_score": 30,
+  "indicators": [
+    {
+      "type": "shortened_url"
+    }
+  ],
+  "top_findings": [
+    {
+      "type": "shortened_url"
+    }
+  ]
+}

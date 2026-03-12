@@ -1,0 +1,33 @@
+{
+  "file_name": "temp_textfile.jpg",
+  "file_size": "27.00 B",
+  "mime_type": "image/jpeg",
+  "magic_header": "unknown",
+  "hashes": {
+    "md5": "2b56f844110d94154d5fdd7290825333",
+    "sha1": "7b9441d432641980f9b968d8a483019b8afdb4c4",
+    "sha256": "f92d417cfc0ff2e1fe56bfc362ad9190436e81950477d12400f4eeab3e59acf4"
+  },
+  "entropy": 3.3764,
+  "extension_mismatch": true,
+  "metadata": {
+    "os_timestamps": {
+      "os_created": "2026-03-05T02:19:15.326937+00:00",
+      "os_modified": "2026-03-05T02:19:15.327943+00:00"
+    },
+    "exif": {},
+    "lsb_score": null,
+    "bits_per_pixel": null
+  },
+  "suspicious_strings": [
+    "This is a secret message .."
+  ],
+  "mp4_warnings": [],
+  "analysis_timestamp": "2026-03-05T02:19:15.433920+00:00",
+  "timestomp_detected": false,
+  "risk_score": 45,
+  "risk_reasons": [
+    "Extension mismatch",
+    "Suspicious strings"
+  ]
+}

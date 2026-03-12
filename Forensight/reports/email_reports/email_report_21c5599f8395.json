@@ -1,0 +1,23 @@
+{
+  "module_name": "email",
+  "analysis_time": "2026-03-01T10:28:31.634289+00:00",
+  "email_hash": "21c5599f83959b08cd1e362ad680f311fc7df8ef0c7cdd16e31b37f84cd3c227",
+  "headers": {
+    "from": "support@amaz0n-security.com Subject: Urgent: Account Suspended  Dear Customer,  Your account has been temporarily suspended due to suspicious activity. Click the link below to verify your identity:  http://amaz0n-security-verification.com/login  Failure to verify within 24 hours will result in permanent account deletion.  Thank you, Security Team",
+    "to": "",
+    "subject": "",
+    "date": ""
+  },
+  "total_records": 1,
+  "risk_score": 8,
+  "indicators": [
+    {
+      "type": "missing_date_header"
+    }
+  ],
+  "top_findings": [
+    {
+      "type": "missing_date_header"
+    }
+  ]
+}

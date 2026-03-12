@@ -1,0 +1,23 @@
+{
+  "module_name": "email",
+  "analysis_time": "2026-03-05T02:19:23.797652+00:00",
+  "email_hash": "836855f0b46e1b91172099895b41168dc9e5f3092205e610f86cfce8034aa2d7",
+  "headers": {
+    "from": "",
+    "to": "",
+    "subject": "",
+    "date": ""
+  },
+  "total_records": 1,
+  "risk_score": 8,
+  "indicators": [
+    {
+      "type": "missing_date_header"
+    }
+  ],
+  "top_findings": [
+    {
+      "type": "missing_date_header"
+    }
+  ]
+}

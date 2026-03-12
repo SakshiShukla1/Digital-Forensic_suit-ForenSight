@@ -1,0 +1,10 @@
+{
+  "url": "http://paypal-login-verification-secure.com",
+  "score": 35,
+  "verdict": "Suspicious",
+  "findings": [
+    "Domain contains multiple hyphens.",
+    "URL contains phishing-related keywords."
+  ],
+  "timestamp": "2026-03-01T13:07:38.351481"
+}

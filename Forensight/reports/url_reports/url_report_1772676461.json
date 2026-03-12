@@ -1,0 +1,19 @@
+{
+  "module_name": "url",
+  "url": "https://gemini.google.com/app/187e74b591aad38c?hl=en-IN",
+  "analysis_time": "2026-03-05T07:37:41.928589",
+  "total_records": 1,
+  "risk_score": 35,
+  "indicators": [
+    {
+      "type": "brand_spoofing",
+      "brand": "google"
+    }
+  ],
+  "top_findings": [
+    {
+      "type": "brand_spoofing",
+      "brand": "google"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "module_name": "url",
+  "url": "http://free-gift-card-now.com",
+  "analysis_time": "2026-03-01T16:01:36.924253",
+  "total_records": 1,
+  "risk_score": 15,
+  "indicators": [
+    {
+      "type": "multiple_hyphens"
+    }
+  ],
+  "top_findings": [
+    {
+      "type": "multiple_hyphens"
+    }
+  ]
+}

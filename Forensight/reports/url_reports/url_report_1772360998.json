@@ -1,0 +1,31 @@
+{
+  "module_name": "url",
+  "url": "http://paypal-login-verification-secure.com",
+  "analysis_time": "2026-03-01T15:59:58.290643",
+  "total_records": 1,
+  "risk_score": 31,
+  "indicators": [
+    {
+      "type": "multiple_hyphens"
+    },
+    {
+      "type": "phishing_keywords",
+      "details": [
+        "login",
+        "secure"
+      ]
+    }
+  ],
+  "top_findings": [
+    {
+      "type": "multiple_hyphens"
+    },
+    {
+      "type": "phishing_keywords",
+      "details": [
+        "login",
+        "secure"
+      ]
+    }
+  ]
+}

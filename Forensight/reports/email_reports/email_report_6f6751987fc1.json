@@ -1,0 +1,31 @@
+{
+  "module_name": "email",
+  "analysis_time": "2026-03-01T11:59:26.677226+00:00",
+  "email_hash": "6f6751987fc1b1ead13f92227ce3dcc9d30afd92dfd2927f28230a3ed8315fc8",
+  "headers": {
+    "from": "",
+    "to": "",
+    "subject": "URGENT: Verify Your Bank Account  Dear Customer,  Your bank account has been temporarily suspended. Click the link below to verify immediately:  http://secure-bank-login-confirm.xyz  Failure to verify will result in permanent closure.  Regards, Bank Security Team",
+    "date": ""
+  },
+  "total_records": 1,
+  "risk_score": 28,
+  "indicators": [
+    {
+      "type": "brand_impersonation",
+      "brand": "bank"
+    },
+    {
+      "type": "missing_date_header"
+    }
+  ],
+  "top_findings": [
+    {
+      "type": "brand_impersonation",
+      "brand": "bank"
+    },
+    {
+      "type": "missing_date_header"
+    }
+  ]
+}

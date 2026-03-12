@@ -1,0 +1,17 @@
+{
+  "module_name": "url",
+  "url": "http://localhost:5173/",
+  "analysis_time": "2026-03-05T07:49:38.061291",
+  "total_records": 1,
+  "risk_score": 15,
+  "indicators": [
+    {
+      "type": "numeric_domain"
+    }
+  ],
+  "top_findings": [
+    {
+      "type": "numeric_domain"
+    }
+  ]
+}

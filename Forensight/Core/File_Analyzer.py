@@ -41,14 +41,20 @@ except ImportError:
     docx = None
 
 
-# ==================================================
 # BASIC FILE UTILITIES
-# ==================================================
+
 
 def read_file_bytes(path, max_bytes=None):
     with open(path, "rb") as f:
         return f.read(max_bytes) if max_bytes else f.read()
 
+def get_os_metadata(path):
+    """Fetches external OS-level timestamps."""
+    stat = os.stat(path)
+    return {
+        "os_created": datetime.fromtimestamp(stat.st_ctime, tz=timezone.utc).isoformat(),
+        "os_modified": datetime.fromtimestamp(stat.st_mtime, tz=timezone.utc).isoformat()
+    }
 
 def get_file_size(path):
     return os.path.getsize(path)
@@ -75,9 +81,7 @@ def compute_hashes(path):
     return {k: v.hexdigest() for k, v in hashes.items()}
 
 
-# ==================================================
 # MIME & SIGNATURE ANALYSIS
-# ==================================================
 
 MAGIC_SIGNATURES = [
     (b"\xFF\xD8\xFF", "image/jpeg"),
@@ -105,9 +109,7 @@ def detect_mime_type(path):
     return mimetypes.guess_type(path)[0] or "application/octet-stream"
 
 
-# ==================================================
 # ENTROPY ANALYSIS
-# ==================================================
 
 def shannon_entropy(data):
     if not data:
@@ -121,9 +123,7 @@ def shannon_entropy(data):
     )
 
 
-# ==================================================
 # IMAGE FORENSICS
-# ==================================================
 
 def extract_exif_metadata(path):
     if not exifread:
@@ -163,9 +163,7 @@ def bits_per_pixel(path):
         return None
 
 
-# ==================================================
 # DOCUMENT & VIDEO METADATA
-# ==================================================
 
 def extract_pdf_metadata(path):
     if not PyPDF2:
@@ -213,9 +211,7 @@ def extract_video_metadata(path):
         return {"error": str(e)}
 
 
-# ==================================================
 # MP4 STRUCTURAL FORENSICS
-# ==================================================
 
 COMMON_MP4_ATOMS = {
     b"ftyp", b"moov", b"mdat", b"free", b"mvhd",
@@ -255,9 +251,7 @@ def scan_mp4_structure(path):
     return issues
 
 
-# ==================================================
 # STRING EXTRACTION
-# ==================================================
 
 def extract_ascii_strings(path, min_length=6, limit=200):
     data = read_file_bytes(path)
@@ -266,9 +260,7 @@ def extract_ascii_strings(path, min_length=6, limit=200):
     return list(strings)[:limit]
 
 
-# ==================================================
 # RISK ASSESSMENT ENGINE
-# ==================================================
 
 def compute_risk_score(report):
     score = 0
@@ -293,11 +285,12 @@ def compute_risk_score(report):
     return min(score, 100), reasons
 
 
-# ==================================================
 # CORE ANALYSIS FUNCTION
-# ==================================================
 
 def analyze_file(path):
+    # Fetch OS data
+    os_meta = get_os_metadata(path)
+    
     report = {
         "file_name": os.path.basename(path),
         "file_size": human_readable_size(get_file_size(path)),
@@ -306,10 +299,13 @@ def analyze_file(path):
         "hashes": compute_hashes(path),
         "entropy": shannon_entropy(read_file_bytes(path, 1024 * 1024)),
         "extension_mismatch": False,
-        "metadata": {},
+        "metadata": {
+            "os_timestamps": os_meta  # Store OS dates here
+        },
         "suspicious_strings": [],
         "mp4_warnings": [],
-        "analysis_timestamp": datetime.now(timezone.utc).isoformat()
+        "analysis_timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestomp_detected": False # NEW: Forensic Flag
     }
 
     extension = os.path.splitext(path)[1].lower().strip(".")
@@ -318,10 +314,17 @@ def analyze_file(path):
 
     report["suspicious_strings"] = extract_ascii_strings(path)
 
+    # IMAGE METADATA + TIME STOMP CHECK
     if extension in {"jpg", "jpeg", "png"}:
-        report["metadata"]["exif"] = extract_exif_metadata(path)
+        exif = extract_exif_metadata(path)
+        report["metadata"]["exif"] = exif
         report["metadata"]["lsb_score"] = lsb_steganography_score(path)
         report["metadata"]["bits_per_pixel"] = bits_per_pixel(path)
+        
+        # Check if internal EXIF year matches OS year
+        if exif and "Image DateTime" in exif:
+            if exif["Image DateTime"][:4] != os_meta["os_created"][:4]:
+                report["timestomp_detected"] = True
 
     if extension == "pdf":
         report["metadata"]["pdf"] = extract_pdf_metadata(path)
@@ -333,13 +336,17 @@ def analyze_file(path):
         report["metadata"]["video"] = extract_video_metadata(path)
         report["mp4_warnings"] = scan_mp4_structure(path)
 
+    # Risk Scoring
     report["risk_score"], report["risk_reasons"] = compute_risk_score(report)
+    
+    # Add points if dates don't match
+    if report["timestomp_detected"]:
+        report["risk_score"] = min(report["risk_score"] + 30, 100)
+        report["risk_reasons"].append("Possible Timestomping: Date Discrepancy Detected")
+
     return report
 
 
-# ==================================================
-# CLI ENTRY POINT
-# ==================================================
 
 def main():
     if len(sys.argv) != 2:
@@ -365,54 +372,76 @@ if __name__ == "__main__":
     main()
 
 
-# ... (all your existing forensic logic functions stay above) ...
-
-# ==================================================
-# THE UI BRIDGE (Add this at the bottom)
-# ==================================================
-
 def run_module(file_path):
-    """
-    Bridge function for the Frontend UI.
-    Takes a file_path, runs all forensic tests, 
-    and returns a package for the Dashboard.
-    """
+
     if not os.path.isfile(file_path):
         return {"status": "error", "message": "File not found"}
 
     try:
-        # 1. Run your core logic
         report = analyze_file(file_path)
-        
-        # 2. Save the JSON report for the records
+
+        # --- Save JSON forensic report ---
         report_dir = os.path.join(os.getcwd(), "reports", "file_reports")
         os.makedirs(report_dir, exist_ok=True)
-        
-        # We use the MD5 hash to give the report a unique name
+
         report_name = f"file_report_{report['hashes']['md5'][:8]}.json"
         report_path = os.path.join(report_dir, report_name)
-        
+
         with open(report_path, "w", encoding="utf-8") as f:
             json.dump(report, f, indent=2)
 
-        # 3. Prepare the UI Package (This is what your UI "sees")
+        # --- Build Indicators ---
+        indicators = []
+
+        for reason in report.get("risk_reasons", []):
+            indicators.append({
+                "type": "risk_factor",
+                "details": reason
+            })
+
+        if report.get("extension_mismatch"):
+            indicators.append({
+                "type": "extension_mismatch"
+            })
+
+        if report.get("entropy", 0) >= 7.5:
+            indicators.append({
+                "type": "high_entropy",
+                "value": report["entropy"]
+            })
+
+        if report.get("mp4_warnings"):
+            indicators.append({
+                "type": "mp4_structural_anomaly",
+                "details": report["mp4_warnings"]
+            })
+
+        # --- Standardized Risk Contract ---
+        score = report["risk_score"]
+
+        verdict = (
+            "CRITICAL_RISK" if score >= 75 else
+            "HIGH_RISK" if score >= 50 else
+            "MODERATE_RISK" if score >= 25 else
+            "LOW_RISK"
+        )
+
         return {
-            "status": "success",
-            "file_name": report["file_name"],
-            "file_size": report["file_size"],
-            "mime_type": report["mime_type"],
-            "risk_score": report["risk_score"],
-            "verdict": "Suspicious" if report["risk_score"] > 50 else "Safe",
-            "entropy": report["entropy"],
-            "mismatch": report["extension_mismatch"],
-            "report_path": report_path,
-            "all_data": report 
+            "module": "file",
+            "score": score,
+            "verdict": verdict,
+            "indicators": indicators,
+            "top_findings": indicators[:5],
+            "summary": {
+                "file_name": report["file_name"],
+                "file_size": report["file_size"],
+                "mime_type": report["mime_type"],
+                "entropy": report["entropy"],
+                "sha256": report["hashes"]["sha256"],
+                "metadata": report["metadata"]
+            },
+            "json_report": report_path
         }
+
     except Exception as e:
         return {"status": "error", "message": str(e)}
-
-# This is the NEW clean entry point for testing
-if __name__ == "__main__":
-    # If you want to test without the UI, uncomment the line below:
-    # print(run_module("path/to/your/test_file.exe"))
-    print("File Analyzer Module Loaded. Waiting for UI call...")
